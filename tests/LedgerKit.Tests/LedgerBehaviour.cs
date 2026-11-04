@@ -131,7 +131,7 @@ public abstract class LedgerBehaviour
             "one line" => new($"{U}-x", d, "Sale", [NewLine.Debit(bank, 1m)]),
             "mixed currencies" => new($"{U}-x", d, "Exchange", [NewLine.Debit($"{U}-khr", 4100m), NewLine.Credit(bank, 1m), NewLine.Debit(bank, 1m)]),
             "too large" => new($"{U}-x", d, "Sale", [NewLine.Debit(bank, 2_000_000_000_000_000m), NewLine.Credit(sales, 2_000_000_000_000_000m)]),
-            "bidi in description" => new($"{U}-x", d, "Refund ‮0001", [NewLine.Debit(bank, 1m), NewLine.Credit(sales, 1m)]),
+            "bidi in description" => new($"{U}-x", d, "Refund \u202E0001", [NewLine.Debit(bank, 1m), NewLine.Credit(sales, 1m)]),
             "control in memo" => new($"{U}-x", d, "Sale", [NewLine.Debit(bank, 1m, "\u001B[31m"), NewLine.Credit(sales, 1m)]),
             "bad key" => new("'; drop table ledgerkit.entry; --", d, "Sale", [NewLine.Debit(bank, 1m), NewLine.Credit(sales, 1m)]),
             "spaces" => new($"{U}-x", d, " Sale", [NewLine.Debit(bank, 1m), NewLine.Credit(sales, 1m)]),
