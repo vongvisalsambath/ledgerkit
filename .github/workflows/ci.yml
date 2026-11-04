@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Actions and the PostgreSQL image are pinned (versions in comments), so a moved tag can't change what runs here.
+jobs:
+  test:
+    name: Library, PostgreSQL and command
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    services:
+      postgres:
+        image: postgres:16.14@sha256:95206741a5b214807675e14165369d05b93a9cf692223b616d07cca227e74b0b
+        env:
+          POSTGRES_USER: ledgerkit_test
+          POSTGRES_PASSWORD: ledgerkit_test
+          POSTGRES_DB: ledgerkit_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U ledgerkit_test" --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      LEDGERKIT_TEST_DB: Host=localhost;Username=ledgerkit_test;Password=ledgerkit_test;Database=ledgerkit_test
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          path: ledgerkit
+          persist-credentials: false
+      # Iso20022Kit isn't on NuGet yet: build it from a pinned commit
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          repository: vongvisalsambath/iso20022kit
+          ref: 597b3f2c1b95f7b0bb9c6c34c5b42d32281d1692
+          path: iso20022kit
+          persist-credentials: false
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+        with:
+          dotnet-version: |
+            8.0.x
+            10.0.x
+      - working-directory: ledgerkit
+        run: dotnet test --configuration Release
+      - name: No known-vulnerable packages
+        working-directory: ledgerkit
+        run: |
+          dotnet list package --vulnerable --include-transitive | tee vulnerable.txt
+          ! grep -q "has the following vulnerable packages" vulnerable.txt
+      - name: The sample reconciles as documented
+        working-directory: ledgerkit
+        run: |
+          set +e
+          dotnet run --project src/LedgerKit.Cli -c Release -f net10.0 -- reconcile samples/statement.xml --account 1010 --ledger samples/ledger.json > report.txt
+          code=$?
+          set -e
+          cat report.txt
+          test "$code" = 1
+          grep -q "250.50" report.txt
+      - working-directory: ledgerkit
+        run: |
+          dotnet pack src/LedgerKit -c Release -o nupkg
+          dotnet pack src/LedgerKit.PostgreSql -c Release -o nupkg
+          dotnet pack src/LedgerKit.Cli -c Release -o nupkg

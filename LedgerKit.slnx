@@ -1,0 +1,10 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LedgerKit/LedgerKit.csproj" />
+    <Project Path="src/LedgerKit.PostgreSql/LedgerKit.PostgreSql.csproj" />
+    <Project Path="src/LedgerKit.Cli/LedgerKit.Cli.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LedgerKit.Tests/LedgerKit.Tests.csproj" />
+  </Folder>
+</Solution>

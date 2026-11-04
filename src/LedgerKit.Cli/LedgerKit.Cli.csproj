@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <AssemblyName>LedgerKit.Cli</AssemblyName>
+    <RootNamespace>LedgerKit.Cli</RootNamespace>
+    <PackAsTool>true</PackAsTool>
+    <ToolCommandName>ledgerkit</ToolCommandName>
+    <PackageId>LedgerKit.Cli</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Vong Visalsambath</Authors>
+    <Description>Post to a double-entry ledger and reconcile it with ISO 20022 camt.053 bank statements, from the command line.</Description>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/vongvisalsambath/ledgerkit</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="LedgerKit.Tests" />
+    <ProjectReference Include="../LedgerKit/LedgerKit.csproj" />
+    <ProjectReference Include="../LedgerKit.PostgreSql/LedgerKit.PostgreSql.csproj" />
+  </ItemGroup>
+</Project>

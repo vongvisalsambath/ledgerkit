@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <PackageId>LedgerKit</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Vong Visalsambath</Authors>
+    <Description>A double-entry ledger that refuses unbalanced or edited entries, and bank reconciliation against ISO 20022 camt.053 statements: what matched, what didn't, and why the balances differ.</Description>
+    <PackageTags>ledger;double-entry;accounting;reconciliation;camt.053;iso20022;banking</PackageTags>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/vongvisalsambath/ledgerkit</RepositoryUrl>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(Iso20022KitDir)src/Iso20022Kit/Iso20022Kit.csproj" />
+    <InternalsVisibleTo Include="LedgerKit.PostgreSql" />
+    <InternalsVisibleTo Include="LedgerKit.Tests" />
+  </ItemGroup>
+</Project>

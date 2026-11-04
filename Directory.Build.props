@@ -1,0 +1,10 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <!-- Iso20022Kit isn't on NuGet yet: it is referenced from a checkout next to this one (CI checks out a pinned commit). -->
+    <Iso20022KitDir Condition="'$(Iso20022KitDir)' == ''">$(MSBuildThisFileDirectory)../iso20022kit/</Iso20022KitDir>
+  </PropertyGroup>
+</Project>

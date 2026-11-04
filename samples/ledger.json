@@ -1,0 +1,19 @@
+{
+  "accounts": [
+    { "code": "1010", "name": "Bank: Demo Bank EUR", "type": "asset", "currency": "EUR" },
+    { "code": "2100", "name": "Cheques issued", "type": "liability", "currency": "EUR" },
+    { "code": "3000", "name": "Owner's equity", "type": "equity", "currency": "EUR" },
+    { "code": "4000", "name": "Sales", "type": "income", "currency": "EUR" },
+    { "code": "6100", "name": "Rent", "type": "expense", "currency": "EUR" }
+  ],
+  "entries": [
+    { "key": "open-2026-11", "date": "2026-11-01", "description": "Opening balance", "reference": null,
+      "lines": [ { "account": "1010", "debit": 10000.00, "credit": null, "memo": null }, { "account": "3000", "debit": null, "credit": 10000.00, "memo": null } ] },
+    { "key": "order-7781", "date": "2026-11-03", "description": "Order 7781, 2 bikes", "reference": "ORDER-7781",
+      "lines": [ { "account": "1010", "debit": 1500.00, "credit": null, "memo": null }, { "account": "4000", "debit": null, "credit": 1500.00, "memo": null } ] },
+    { "key": "rent-2026-11", "date": "2026-11-04", "description": "Rent November", "reference": "RENT-NOV",
+      "lines": [ { "account": "6100", "debit": 250.50, "credit": null, "memo": null }, { "account": "1010", "debit": null, "credit": 250.50, "memo": null } ] },
+    { "key": "cheque-1001", "date": "2026-11-04", "description": "Cheque 1001 to a supplier", "reference": "CHQ-1001",
+      "lines": [ { "account": "2100", "debit": 300.00, "credit": null, "memo": null }, { "account": "1010", "debit": null, "credit": 300.00, "memo": null } ] }
+  ]
+}
