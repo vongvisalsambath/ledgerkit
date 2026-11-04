@@ -15,7 +15,7 @@ public sealed class ReportTests
     [InlineData("\tcmd", "\"'\\u0009cmd\"")]
     [InlineData("Rent, November", "\"Rent, November\"")]
     [InlineData("line\r\nbreak", "\"line\\u000D\\u000Abreak\"")]
-    public void CsvCellsCantBecomeFormulas(string text, string cell) => Assert.Equal(cell, Report.Cell(text));
+    public void CsvCellsCantBecomeFormulas(string text, string cell) => Assert.Equal(cell, ReconciliationCsv.Cell(text));
 
     [Fact]
     public void TerminalEscapesAndDirectionMarksArePrintedAsCodes()

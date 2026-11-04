@@ -11,7 +11,6 @@ internal static class Report
 {
     private static readonly CultureInfo Inv = CultureInfo.InvariantCulture;
     private static string M(decimal d) => d.ToString("#,0.00######", Inv);
-    private static string N(decimal d) => d.ToString("0.00######", Inv);
 
     public static string Text(IReadOnlyList<ReconciliationReport> reports)
     {
@@ -73,34 +72,5 @@ internal static class Report
         }), options) + Environment.NewLine;
     }
 
-    public static string Csv(IReadOnlyList<ReconciliationReport> reports)
-    {
-        var sb = new StringBuilder("statement,status,rule,bank_id,bank_date,bank_amount,ledger_date,ledger_amount,ledger_reference,ledger_entry,explanation\r\n");
-        void Row(ReconciliationReport r, string status, string rule, BankLine? b, LedgerLine? l, string explanation) =>
-            sb.Append(string.Join(',',
-                Cell(r.Statement.Id), Cell(status), Cell(rule), Cell(b?.Id), b is null ? "" : b.Date.ToString("yyyy-MM-dd", Inv), b is null ? "" : N(b.Amount),
-                l is null ? "" : l.Date.ToString("yyyy-MM-dd", Inv), l is null ? "" : N(l.Amount), Cell(l?.Reference), l is null ? "" : l.EntryId.ToString(), Cell(explanation))).Append("\r\n");
-        foreach (var r in reports)
-        {
-            foreach (var m in r.Matched) foreach (var l in m.Ledger) Row(r, "matched", m.Rule.ToString(), m.Bank, l, m.Explanation);
-            foreach (var b in r.UnmatchedBank) Row(r, "bank only", "", b, null, b.Description ?? "");
-            foreach (var l in r.UnmatchedLedger) Row(r, "ledger only", "", null, l, l.Description);
-            foreach (var q in r.Questions)
-                if (q.Candidates.Count == 0) Row(r, "decide", "", q.Bank, null, q.Explanation);
-                else foreach (var l in q.Candidates) Row(r, "decide", "", q.Bank, l, q.Explanation);
-        }
-        return sb.ToString();
-    }
-
-    /// <summary>
-    /// A text cell. Quoted, and a leading =, +, -, @, tab or carriage return gets an apostrophe so a spreadsheet shows
-    /// it instead of running it as a formula (CSV injection). Controls and direction marks are escaped.
-    /// </summary>
-    internal static string Cell(string? s)
-    {
-        if (string.IsNullOrEmpty(s)) return "";
-        var text = Safe.Text(s, 500);
-        if (text[0] is '=' or '+' or '-' or '@' || s[0] is '\t' or '\r') text = "'" + text;
-        return "\"" + text.Replace("\"", "\"\"") + "\"";
-    }
+    public static string Csv(IReadOnlyList<ReconciliationReport> reports) => ReconciliationCsv.Write(reports);
 }

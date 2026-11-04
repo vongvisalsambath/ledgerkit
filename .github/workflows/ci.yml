@@ -63,6 +63,20 @@ jobs:
           cat report.txt
           test "$code" = 1
           grep -q "250.50" report.txt
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ledgerkit/site/test/package-lock.json
+      - name: Website in Chromium, with the production headers
+        working-directory: ledgerkit
+        run: |
+          dotnet publish site/LedgerKit.Web -c Release -o out
+          cd site/test
+          npm ci
+          npm audit --audit-level=moderate
+          npx playwright install --with-deps chromium
+          node e2e.cjs ../../out/wwwroot
       - working-directory: ledgerkit
         run: |
           dotnet pack src/LedgerKit -c Release -o nupkg

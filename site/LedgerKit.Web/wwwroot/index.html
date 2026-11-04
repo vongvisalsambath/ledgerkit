@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>LedgerKit · Reconcile a bank statement with your books</title>
+  <meta name="description" content="Reconcile an ISO 20022 camt.053 bank statement with ledger lines: what matched and why, what didn't, and exactly why the balances differ. Runs in your browser; nothing is uploaded." />
+  <meta name="theme-color" content="#3b4cca" />
+  <meta name="referrer" content="no-referrer" />
+  <base href="/" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/site.css" />
+</head>
+<body>
+  <header class="top">
+    <a class="brand" href="/"><img src="favicon.svg" alt="" width="24" height="24" />LedgerKit</a>
+    <p class="tag">Bank reconciliation for camt.053 statements. Runs in your browser; nothing is uploaded.</p>
+    <nav><a href="https://github.com/vongvisalsambath/ledgerkit">GitHub</a></nav>
+  </header>
+  <main id="app">
+    <p class="loading">Loading…</p>
+    <noscript><p class="loading">This page needs JavaScript and WebAssembly.</p></noscript>
+  </main>
+  <div id="blazor-error-ui" role="alert">Something went wrong. <a href="/" class="reload">Reload</a></div>
+  <footer class="foot">
+    <span>LedgerKit · open source (Apache-2.0) · by Vong Visalsambath</span>
+    <span>The sample statement and ledger are made up.</span>
+  </footer>
+  <script src="js/download.js"></script>
+  <script src="_framework/blazor.webassembly.js"></script>
+</body>
+</html>

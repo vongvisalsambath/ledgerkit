@@ -4,6 +4,9 @@
     <Project Path="src/LedgerKit.PostgreSql/LedgerKit.PostgreSql.csproj" />
     <Project Path="src/LedgerKit.Cli/LedgerKit.Cli.csproj" />
   </Folder>
+  <Folder Name="/site/">
+    <Project Path="site/LedgerKit.Web/LedgerKit.Web.csproj" />
+  </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/LedgerKit.Tests/LedgerKit.Tests.csproj" />
   </Folder>

@@ -114,6 +114,19 @@ ledgerkit reconcile statement.xml --account CODE [--window DAYS] [--format text|
 
 The database connection string comes from the `LEDGERKIT_DB` environment variable, never from an argument, so the password doesn't appear in process lists. To try the read-only commands without a database, give `--ledger ledger.json` (see [`samples/`](samples)). `reconcile` exits with 0 when everything matched, 1 when not, and 2 for a usage, file or database error.
 
+## Website
+
+`site/LedgerKit.Web` is a Blazor WebAssembly page that runs the same reconciliation in the browser:
+- give it a camt.053 statement and the bank account's ledger lines as `date,reference,amount,description`;
+- it shows the report and offers it as CSV;
+- nothing is uploaded.
+
+```
+dotnet publish site/LedgerKit.Web -c Release -o out      # static site in out/wwwroot
+cd site/test && npm ci && npx playwright install chromium
+node e2e.cjs ../../out/wwwroot                             # the site in Chromium, under the production headers
+```
+
 ## Building
 
 LedgerKit uses Iso20022Kit, which isn't on NuGet yet. Check it out next to this repository:

@@ -1,0 +1,73 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && bash /tmp/dotnet-install.sh --channel 10.0 --install-dir /tmp/dotnet && git clone --quiet https://github.com/vongvisalsambath/iso20022kit .deps/iso20022kit && git -C .deps/iso20022kit checkout --quiet 597b3f2c1b95f7b0bb9c6c34c5b42d32281d1692",
+  "buildCommand": "/tmp/dotnet/dotnet publish site/LedgerKit.Web -c Release -o out -p:Iso20022KitDir=$PWD/.deps/iso20022kit/",
+  "outputDirectory": "out/wwwroot",
+  "framework": null,
+  "headers": [
+    {
+      "source": "/_framework/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    },
+    {
+      "source": "/_framework/dotnet.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/_framework/blazor.webassembly.js",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache"
+        }
+      ]
+    },
+    {
+      "source": "/(.*)",
+      "headers": [
+        {
+          "key": "Content-Security-Policy",
+          "value": "default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; style-src-attr 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "Cross-Origin-Opener-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Cross-Origin-Resource-Policy",
+          "value": "same-origin"
+        },
+        {
+          "key": "Strict-Transport-Security",
+          "value": "max-age=63072000; includeSubDomains"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=(), payment=(), usb=()"
+        }
+      ]
+    }
+  ]
+}

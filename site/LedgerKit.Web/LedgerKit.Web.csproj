@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <InvariantGlobalization>true</InvariantGlobalization>
+    <PublishTrimmed>true</PublishTrimmed>
+    <TrimMode>full</TrimMode>
+    <!-- Vercel compresses responses itself -->
+    <CompressionEnabled>false</CompressionEnabled>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="10.0.14" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="10.0.14" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/LedgerKit/LedgerKit.csproj" />
+    <!-- Iso20022Kit reads messages with XmlSerializer over its generated types, which trimming can't see -->
+    <TrimmerRootAssembly Include="Iso20022Kit" />
+    <EmbeddedResource Include="../../samples/statement.xml" LogicalName="sample-statement.xml" />
+  </ItemGroup>
+
+</Project>

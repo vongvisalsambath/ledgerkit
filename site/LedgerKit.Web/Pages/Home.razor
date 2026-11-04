@@ -1,0 +1,122 @@
+@page "/"
+@inject IJSRuntime JS
+
+<PageTitle>LedgerKit · Reconcile a bank statement with your books</PageTitle>
+
+<section class="hero">
+  <h1>Why doesn't the bank <span class="hl">agree</span> with the books?</h1>
+  <p class="lead">Give a camt.053 bank statement and the bank account's lines from your ledger. You'll see what matched and why, what is only on one side, what needs a decision, and exactly why the balances differ. Everything runs in this page.</p>
+</section>
+
+<div class="grid">
+  <section class="card inputs" aria-label="Statement and ledger">
+    <div class="field">
+      <div class="label-row"><label for="statement">Bank statement (camt.053.001.08 XML)</label>
+        <span class="file"><InputFile OnChange="OpenStatement" accept=".xml,text/xml,application/xml" aria-label="Open a statement file" /></span></div>
+      <textarea id="statement" rows="10" spellcheck="false" @bind="statementXml" @bind:event="oninput" @bind:after="Changed"></textarea>
+    </div>
+    <div class="field">
+      <label for="ledger">The bank account's ledger lines: date, reference, amount, description</label>
+      <textarea id="ledger" rows="8" spellcheck="false" @bind="ledgerCsv" @bind:event="oninput" @bind:after="Changed"></textarea>
+      <p class="hint">One line each. Money in is positive. The reference is what the bank will show (an end-to-end ID or invoice number); leave it empty if there's none.</p>
+    </div>
+    <label class="window">Match amounts up to
+      <select @bind="window" @bind:after="Changed">
+        @foreach (var d in new[] { 0, 1, 2, 3, 5, 7, 14 }) { <option value="@d">@d day@(d == 1 ? "" : "s")</option> }
+      </select> apart</label>
+    <button type="button" class="ghost" @onclick="Reset">Back to the sample</button>
+  </section>
+
+  <section class="card results" aria-live="polite">
+    @if (problems.Count > 0)
+    {
+      <div class="problems" role="alert">
+        <strong>That can't be reconciled yet</strong>
+        <ul>@foreach (var p in problems) { <li>@p</li> }</ul>
+      </div>
+    }
+    @foreach (var r in reports)
+    {
+      var s = r.Statement;
+      <div class="verdict @(r.Reconciled ? "ok" : "bad")">
+        <strong>@(r.Reconciled ? "Reconciled" : "Not reconciled")</strong>
+        <span>Statement @s.Id @(s.Iban ?? s.OtherAccountId), @s.From.ToString("d MMM yyyy", Inv)@(s.To != s.From ? " to " + s.To.ToString("d MMM yyyy", Inv) : ""), @s.Currency</span>
+      </div>
+      @foreach (var note in s.Notes) { <p class="note">@note</p> }
+
+      <div class="table-wrap"><table class="balances">
+        <thead><tr><th></th><th>Statement</th><th>Ledger</th><th>Difference</th></tr></thead>
+        <tbody>
+          @if (s.Opening is decimal o) { <tr><th>Opening</th><td>@M(o)</td><td>@M(r.LedgerOpening)</td><td class="@(o != r.LedgerOpening ? "diff" : "")">@M(o - r.LedgerOpening)</td></tr> }
+          @if (s.Closing is decimal c) { <tr><th>Closing</th><td>@M(c)</td><td>@M(r.LedgerClosing)</td><td class="@(c != r.LedgerClosing ? "diff" : "")">@M(c - r.LedgerClosing)</td></tr> }
+        </tbody>
+      </table></div>
+
+      @if (r.Difference.Count > 0)
+      {
+        <h2>Why they differ</h2>
+        <ul class="why">
+          @foreach (var d in r.Difference) { <li><span class="amt">@M(d.Amount)</span> <span>@d.What</span></li> }
+          <li class="total"><span class="amt">@M(r.Difference.Sum(d => d.Amount))</span> <span>Together: the closing difference</span></li>
+        </ul>
+      }
+
+      <h2>Matched <span class="count">@r.Matched.Count</span></h2>
+      <ul class="lines">
+        @foreach (var m in r.Matched)
+        {
+          <li class="matched">
+            <span class="amt">@M(m.Bank.Amount)</span>
+            <span class="what"><b>@(m.Ledger.Count == 1 ? (m.Ledger[0].Reference ?? m.Ledger[0].Description) : $"{m.Ledger.Count} ledger lines")</b> · bank @m.Bank.Date.ToString("d MMM", Inv), ledger @string.Join(", ", m.Ledger.Select(l => l.Date.ToString("d MMM", Inv)))</span>
+            <span class="why-small">@m.Explanation</span>
+          </li>
+        }
+      </ul>
+      @if (r.UnmatchedBank.Count > 0)
+      {
+        <h2>On the statement, not in the ledger <span class="count">@r.UnmatchedBank.Count</span></h2>
+        <ul class="lines">
+          @foreach (var b in r.UnmatchedBank)
+          {
+            <li class="bank"><span class="amt">@M(b.Amount)</span><span class="what"><b>@(b.Description ?? b.Counterparty ?? b.Id)</b> · @b.Date.ToString("d MMM", Inv)@(b.EndToEndId is null ? "" : " · " + b.EndToEndId)</span><span class="why-small">Post it in the ledger if it's real (bank fees, interest, a payment nobody recorded).</span></li>
+          }
+        </ul>
+      }
+      @if (r.UnmatchedLedger.Count > 0)
+      {
+        <h2>In the ledger, not on the statement <span class="count">@r.UnmatchedLedger.Count</span></h2>
+        <ul class="lines">
+          @foreach (var l in r.UnmatchedLedger)
+          {
+            <li class="ledger"><span class="amt">@M(l.Amount)</span><span class="what"><b>@(l.Reference ?? l.Description)</b> · @l.Date.ToString("d MMM", Inv) · @l.Description</span><span class="why-small">Not through the bank yet (an uncashed cheque, a transfer in transit), or recorded by mistake.</span></li>
+          }
+        </ul>
+      }
+      @if (r.Questions.Count > 0)
+      {
+        <h2>Needs a decision <span class="count">@r.Questions.Count</span></h2>
+        <ul class="lines">
+          @foreach (var q in r.Questions)
+          {
+            <li class="question"><span class="amt">@M(q.Bank.Amount)</span><span class="what"><b>@(q.Bank.Description ?? q.Bank.Id)</b> · @q.Bank.Date.ToString("d MMM", Inv)</span><span class="why-small">@q.Explanation Candidates: @string.Join("; ", q.Candidates.Select(l => $"{l.Date.ToString("d MMM", Inv)} {M(l.Amount)} {l.Reference ?? l.Description}"))</span></li>
+          }
+        </ul>
+      }
+    }
+    @if (reports.Count > 0)
+    {
+      <div class="actions"><button type="button" @onclick="Download">Download the report (CSV)</button></div>
+    }
+  </section>
+</div>
+
+<section class="explain">
+  <h2>How lines are matched</h2>
+  <ol>
+    <li><b>Reference.</b> The bank's end-to-end ID or reference equals the ledger line's, and so does the amount.</li>
+    <li><b>Reference group.</b> Several ledger lines with that reference add up to the bank line.</li>
+    <li><b>Same amount, same day.</b> As many on each side, so they're interchangeable.</li>
+    <li><b>Amount and date.</b> Within the window, only when there's exactly one candidate on each side.</li>
+  </ol>
+  <p>Nothing is guessed. Anything ambiguous is listed under "needs a decision". The statement is checked first by <a href="https://github.com/vongvisalsambath/iso20022kit">Iso20022Kit</a>: a statement whose balances don't follow from its entries is refused.</p>
+</section>
