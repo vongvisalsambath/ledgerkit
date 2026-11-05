@@ -7,6 +7,11 @@ name: Release
 on:
   push:
     tags: ["v*.*.*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish; must match the version in the project file, e.g. 0.1.0"
+        required: true
 
 permissions:
   contents: read
@@ -40,7 +45,7 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           repository: vongvisalsambath/iso20022kit
-          ref: v0.1.0
+          ref: b026cb56d25f53cbfc0540e2a9410377bb8945cb  # the Iso20022Kit 0.1.0 release
           path: iso20022kit
           persist-credentials: false
       - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
@@ -48,12 +53,15 @@ jobs:
           dotnet-version: |
             8.0.x
             10.0.x
-      - name: The tag matches the package version
+      - name: The requested version matches the package version
         working-directory: ledgerkit
+        env:
+          INPUT_VERSION: ${{ inputs.version }}
         run: |
           v="$(grep -oP '(?<=<Version>)[^<]+' src/LedgerKit/*.csproj)"
-          echo "tag $GITHUB_REF_NAME, package $v"
-          test "v$v" = "$GITHUB_REF_NAME"
+          want="${INPUT_VERSION:-${GITHUB_REF_NAME#v}}"
+          echo "asked for $want, package $v"
+          test "$v" = "$want"
       - working-directory: ledgerkit
         run: dotnet test --configuration Release
       - name: Pack
