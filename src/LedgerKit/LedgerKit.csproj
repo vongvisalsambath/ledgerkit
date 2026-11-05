@@ -13,7 +13,7 @@
     <RepositoryUrl>https://github.com/vongvisalsambath/ledgerkit</RepositoryUrl>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="$(Iso20022KitDir)src/Iso20022Kit/Iso20022Kit.csproj" />
+    <PackageReference Include="Iso20022Kit" Version="0.1.0" />
     <InternalsVisibleTo Include="LedgerKit.PostgreSql" />
     <InternalsVisibleTo Include="LedgerKit.Tests" />
   </ItemGroup>

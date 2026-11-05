@@ -31,6 +31,16 @@ NOT RECONCILED  statement DE89-2026-11-04 (DE89370400440532013000) with account 
 
 In this sample, the bank charged a fee the books don't have yet, and a cheque hasn't been cashed. The sale was booked a day before the bank credited it. Each line of "Why they differ" is one of those, and together they add up to the difference exactly.
 
+## Install
+
+On NuGet: [LedgerKit](https://www.nuget.org/packages/LedgerKit) · [LedgerKit.PostgreSql](https://www.nuget.org/packages/LedgerKit.PostgreSql) · [LedgerKit.Cli](https://www.nuget.org/packages/LedgerKit.Cli). For .NET 8 and .NET 10.
+
+```sh
+dotnet add package LedgerKit
+dotnet add package LedgerKit.PostgreSql   # the PostgreSQL store
+dotnet tool install --global LedgerKit.Cli   # the `ledgerkit` command
+```
+
 ## The ledger
 
 ```csharp
@@ -131,14 +141,7 @@ node e2e.cjs ../../out/wwwroot                             # the site in Chromiu
 
 ## Building
 
-LedgerKit uses Iso20022Kit, which isn't on NuGet yet. Check it out next to this repository:
-
-```
-git clone https://github.com/vongvisalsambath/iso20022kit ../iso20022kit
-dotnet build
-```
-
-(or set `Iso20022KitDir`). The tests need a PostgreSQL database they may change:
+`dotnet build` builds everything; Iso20022Kit comes from NuGet. The tests need a PostgreSQL database they may change:
 
 ```
 export LEDGERKIT_TEST_DB="Host=localhost;Username=…;Password=…;Database=ledgerkit_test"

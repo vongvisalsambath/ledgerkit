@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "installCommand": "bash scripts/vercel-install.sh",
-  "buildCommand": "/tmp/dotnet/dotnet publish site/LedgerKit.Web -c Release -o out -p:Iso20022KitDir=$PWD/.deps/iso20022kit/",
+  "buildCommand": "/tmp/dotnet/dotnet publish site/LedgerKit.Web -c Release -o out",
   "outputDirectory": "out/wwwroot",
   "framework": null,
   "headers": [
