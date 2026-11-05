@@ -1,6 +1,6 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "installCommand": "curl -sSL https://dot.net/v1/dotnet-install.sh -o /tmp/dotnet-install.sh && bash /tmp/dotnet-install.sh --channel 10.0 --install-dir /tmp/dotnet && git clone --quiet https://github.com/vongvisalsambath/iso20022kit .deps/iso20022kit && git -C .deps/iso20022kit checkout --quiet 597b3f2c1b95f7b0bb9c6c34c5b42d32281d1692",
+  "installCommand": "bash scripts/vercel-install.sh",
   "buildCommand": "/tmp/dotnet/dotnet publish site/LedgerKit.Web -c Release -o out -p:Iso20022KitDir=$PWD/.deps/iso20022kit/",
   "outputDirectory": "out/wwwroot",
   "framework": null,
