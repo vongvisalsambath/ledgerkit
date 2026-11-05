@@ -3,6 +3,8 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>LedgerKit.PostgreSql</PackageId>
+    <PackageProjectUrl>https://ledgerkit-rose.vercel.app</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>0.1.0</Version>
     <Authors>Vong Visalsambath</Authors>
     <Description>PostgreSQL storage for LedgerKit. The database itself refuses unbalanced entries and any change to posted ones.</Description>
@@ -13,5 +15,8 @@
     <ProjectReference Include="../LedgerKit/LedgerKit.csproj" />
     <PackageReference Include="Npgsql" Version="10.0.3" />
     <EmbeddedResource Include="schema.sql" LogicalName="LedgerKit.PostgreSql.schema.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>

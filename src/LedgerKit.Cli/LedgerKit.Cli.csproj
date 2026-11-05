@@ -7,6 +7,8 @@
     <PackAsTool>true</PackAsTool>
     <ToolCommandName>ledgerkit</ToolCommandName>
     <PackageId>LedgerKit.Cli</PackageId>
+    <PackageProjectUrl>https://ledgerkit-rose.vercel.app</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>0.1.0</Version>
     <Authors>Vong Visalsambath</Authors>
     <Description>Post to a double-entry ledger and reconcile it with ISO 20022 camt.053 bank statements, from the command line.</Description>
@@ -17,5 +19,8 @@
     <InternalsVisibleTo Include="LedgerKit.Tests" />
     <ProjectReference Include="../LedgerKit/LedgerKit.csproj" />
     <ProjectReference Include="../LedgerKit.PostgreSql/LedgerKit.PostgreSql.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>

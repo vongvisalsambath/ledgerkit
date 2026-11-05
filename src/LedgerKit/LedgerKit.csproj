@@ -3,6 +3,8 @@
     <TargetFrameworks>net8.0;net10.0</TargetFrameworks>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <PackageId>LedgerKit</PackageId>
+    <PackageProjectUrl>https://ledgerkit-rose.vercel.app</PackageProjectUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
     <Version>0.1.0</Version>
     <Authors>Vong Visalsambath</Authors>
     <Description>A double-entry ledger that refuses unbalanced or edited entries, and bank reconciliation against ISO 20022 camt.053 statements: what matched, what didn't, and why the balances differ.</Description>
@@ -14,5 +16,8 @@
     <ProjectReference Include="$(Iso20022KitDir)src/Iso20022Kit/Iso20022Kit.csproj" />
     <InternalsVisibleTo Include="LedgerKit.PostgreSql" />
     <InternalsVisibleTo Include="LedgerKit.Tests" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="../../README.md" Pack="true" PackagePath="/" />
   </ItemGroup>
 </Project>
