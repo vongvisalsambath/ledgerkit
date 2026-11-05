@@ -47,8 +47,8 @@
       <div class="table-wrap"><table class="balances">
         <thead><tr><th></th><th>Statement</th><th>Ledger</th><th>Difference</th></tr></thead>
         <tbody>
-          @if (s.Opening is decimal o) { <tr><th>Opening</th><td>@M(o)</td><td>@M(r.LedgerOpening)</td><td class="@(o != r.LedgerOpening ? "diff" : "")">@M(o - r.LedgerOpening)</td></tr> }
-          @if (s.Closing is decimal c) { <tr><th>Closing</th><td>@M(c)</td><td>@M(r.LedgerClosing)</td><td class="@(c != r.LedgerClosing ? "diff" : "")">@M(c - r.LedgerClosing)</td></tr> }
+          @if (s.Opening is decimal o) { <tr><th>Opening</th><td data-label="Statement">@M(o)</td><td data-label="Ledger">@M(r.LedgerOpening)</td><td data-label="Difference" class="@(o != r.LedgerOpening ? "diff" : "")">@M(o - r.LedgerOpening)</td></tr> }
+          @if (s.Closing is decimal c) { <tr><th>Closing</th><td data-label="Statement">@M(c)</td><td data-label="Ledger">@M(r.LedgerClosing)</td><td data-label="Difference" class="@(c != r.LedgerClosing ? "diff" : "")">@M(c - r.LedgerClosing)</td></tr> }
         </tbody>
       </table></div>
 

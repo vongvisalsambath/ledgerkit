@@ -57,6 +57,15 @@ button.ghost { background: transparent; color: var(--accent); }
 .balances thead th { font-size: 12.5px; color: var(--muted); }
 .balances tbody th { text-align: left; }
 .balances td.diff { color: var(--bad); font-weight: 650; }
+/* on a phone each row becomes a short labelled list, so the figures fit whatever the font */
+@media (max-width: 560px) {
+  .balances thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .balances, .balances tbody, .balances tr, .balances th, .balances td { display: block; width: 100%; }
+  .balances tr { padding: 6px 0; border-bottom: 1px solid var(--line); }
+  .balances th, .balances td { border: 0; padding: 2px 0; }
+  .balances td { display: flex; justify-content: space-between; gap: 12px; text-align: right; overflow-wrap: anywhere; }
+  .balances td::before { content: attr(data-label); color: var(--muted); text-align: left; }
+}
 .why, .lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
 .why li { display: grid; grid-template-columns: 120px 1fr; gap: 10px; padding: 6px 10px; background: var(--bg); border-radius: 8px; }
 .why .total { background: var(--pale); font-weight: 650; }
